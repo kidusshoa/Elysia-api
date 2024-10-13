@@ -1,6 +1,12 @@
 import { Elysia, t } from "elysia";
 import { swagger } from "@elysiajs/swagger";
-import { createPost, getPost, getPosts } from "./handlers";
+import {
+  createPost,
+  deletePost,
+  getPost,
+  getPosts,
+  updatePost,
+} from "./handlers";
 
 const app = new Elysia()
   .use(swagger())
@@ -22,6 +28,34 @@ const app = new Elysia()
       }),
     }),
   })
+  .put("/post/:id", ({ params: { id }, body }) => updatePost(id, body), {
+    params: t.Object({
+      id: t.Numeric(),
+    }),
+    body: t.Object(
+      {
+        title: t.Optional(
+          t.String({
+            minLength: 3,
+            maxLength: 50,
+          })
+        ),
+        content: t.Optional(
+          t.String({
+            minLength: 3,
+            maxLength: 50,
+          })
+        ),
+      },
+      { minProperties: 1 }
+    ),
+  })
+  .delete("/post/:postId", ({ params: { postId } }) => deletePost(postId), {
+    params: t.Object({
+      postId: t.Numeric(),
+    }),
+  })
+
   .listen(3000);
 
 console.log(

@@ -1,3 +1,4 @@
+import { error } from "elysia";
 import { allPosts } from "./db";
 
 export async function getPosts() {
@@ -31,7 +32,7 @@ export async function createPost(options: { title: string; content: string }) {
 
 export async function updatePost(
   id: number,
-  options: { title: string; content: string }
+  options: { title?: string; content?: string }
 ) {
   try {
     const { title, content } = options;
@@ -47,7 +48,21 @@ export async function updatePost(
     if (content !== undefined) {
       item.content = content;
     }
-  } catch (e: any) {
-    console.log(`Error creating post ${e}`);
+    console.log("Updated post");
+    return item;
+  } catch (error: any) {
+    if (error instanceof Error) {
+      console.error("Error updating post:", error.message);
+      throw error;
+    } else {
+      console.error("Unknown error updating post:", error);
+      throw new Error("Unknown error occurred:");
+    }
   }
+}
+
+export async function deletePost(postId: number) {
+  const postIndex = await allPosts.findIndex((post) => post.id === postId);
+  const deletePost = allPosts.splice(postIndex, 1);
+  return deletePost;
 }

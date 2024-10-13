@@ -18,4 +18,10 @@ bun run dev
 
 Open http://localhost:3000/ with your browser to see the result.
 
+For SwaggerUI
+
+```bash
+bun add @elysiajs/swagger
+```
+
 Open http://localhost:3000/swagger with your browser to see swaggerUI.
